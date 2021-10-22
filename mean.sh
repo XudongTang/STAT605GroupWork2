@@ -1,11 +1,26 @@
 function mean {
+	if [[ $# -lt 1 ]];
+	then 
+		echo "usage: $0 <column> [file.csv]" 1>&2;
+		exit 0;
+	fi;
+
+	if [[ $# -eq 1 ]];
+	then
+		default_file=/dev/stdin;
+	else
+		default_file=$2;
+	fi;
+
 	local col=$1;
-	local file=$2;
+	local file=$default_file;
+
+
 	touch file_new.csv;
 	file1="file_new.csv";
-
-	tail -n +2 "$file" > "$file.tmp" && mv "$file.tmp" "$file1";
-	cut -d, -f$col "$file1" > "$file1.tmp" && mv "$file1.tmp" "$file1";
+	
+	
+	tail -n +2 "$file" | cut -d , -f $col > $file1;
 
 	count=0;
 	sum=0;
